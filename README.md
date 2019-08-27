@@ -3,7 +3,7 @@ Naive implementations of common non-smooth optimization (NSO) methods using PyTo
 
 If used for academic purposes, please cite as:
 
-X.Y. Han, *autoNSO: Naive Implementations of Common NSO Methods with Auto-differentiation*, (2019), GitHub repository, https://github.com/xiaoyanh/autoNSO
+... X.Y. Han, *autoNSO: Naive Implementations of Common NSO Methods with Auto-differentiation*, (2019), GitHub repository, https://github.com/xiaoyanh/autoNSO
 
 ```
 @misc{Han2019,
