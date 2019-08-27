@@ -3,4 +3,14 @@ Naive implementations of common non-smooth optimization (NSO) methods using PyTo
 
 If used for academic purposes, please cite as:
 
-X.Y. Han, Naive Implementations of Common NSO Methods with Auto-differentiation, (2019), GitHub repository, https://github.com/charlespwd/project-title
+X.Y. Han, Naive Implementations of Common NSO Methods with Auto-differentiation, (2019), GitHub repository, https://github.com/xiaoyanh/autoNSO
+
+@misc{Han2019,
+  author = {Han, X.Y.},
+  title = {Naive Implementations of Common NSO Methods with Auto-differentiation},
+  year = {2019},
+  publisher = {GitHub},
+  journal = {GitHub repository},
+  howpublished = {\url{https://github.com/xiaoyanh/autoNSO}},
+  commit = {<ADD COMMIT ID HERE>}
+}
