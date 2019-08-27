@@ -5,6 +5,7 @@ If used for academic purposes, please cite as:
 
 X.Y. Han, Naive Implementations of Common NSO Methods with Auto-differentiation, (2019), GitHub repository, https://github.com/xiaoyanh/autoNSO
 
+```
 @misc{Han2019,
   author = {Han, X.Y.},
   title = {Naive Implementations of Common NSO Methods with Auto-differentiation},
@@ -14,3 +15,4 @@ X.Y. Han, Naive Implementations of Common NSO Methods with Auto-differentiation,
   howpublished = {\url{https://github.com/xiaoyanh/autoNSO}},
   commit = {<ADD COMMIT ID HERE>}
 }
+```
