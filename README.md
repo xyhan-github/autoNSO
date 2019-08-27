@@ -8,7 +8,7 @@ X.Y. Han, *autoNSO: Naive Implementations of Common NSO Methods with Auto-differ
 ```
 @misc{Han2019,
   author = {Han, X.Y.},
-  title = {Naive Implementations of Common NSO Methods with Auto-differentiation},
+  title = {autoNSO: Naive Implementations of Common NSO Methods with Auto-differentiation},
   year = {2019},
   publisher = {GitHub},
   journal = {GitHub repository},
