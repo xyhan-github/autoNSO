@@ -1,6 +1,6 @@
 # autoNSO
 Naive implementations of common non-smooth optimization (NSO) methods using PyTorch auto-differentiation as the subgradient oracle. This was created for academic exploration and benchmarking.\
-Maintainer:   X.Y. Han, Cornell University, Operations Research and Information Engineering\
+Maintainer:   X.Y. Han, Cornell University, School of Operations Research and Information Engineering\
 Contact:      xiaoyanhn@gmail.com
 
 Please cite:
