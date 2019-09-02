@@ -13,11 +13,11 @@ import sys
 sys.path.append('..')
 from obj.objective import Objective
 
-def lewis_overton2D(x):
+def simple2D(x):
     return abs(x[0]) + x[1]**2
 
-Lewis_Overton2D = Objective(lewis_overton2D)
-out = Lewis_Overton2D.call_oracle([1,2])
+Simple2D = Objective(simple2D)
+out = Simple2D.call_oracle([1,2])
 
 print(out)
 # {'f': array(5., dtype=float32), 'df': array([1., 4.], dtype=float32)}
