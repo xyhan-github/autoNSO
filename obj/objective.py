@@ -31,6 +31,8 @@ class Objective:
                                  or something that could be cast into it such as\
                                  numpy array, list, etc.')
         
+        assert len(x.shape) == 1
+        
         if (not x.requires_grad) and (self.requires_grad):
             raise Exception('Need to enable gradients on optimization variable.')
         
