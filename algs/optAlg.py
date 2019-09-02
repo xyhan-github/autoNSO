@@ -31,6 +31,9 @@ class OptAlg:
         self.path_fx     = None
         
         self.verbose = verbose
+        
+        self.opt_x     = None
+        self.opt_fx    = None
     
     def optimize(self):
 
@@ -42,6 +45,13 @@ class OptAlg:
             
             if stop:
                 break
+
+        self.opt_x = self.path_x[-1]
+        self.opt_fx = self.path_fx[-1]
+        
+        if self.verbose:
+            print('Optimal Value: ' + str(self.opt_fx))
+            print('Optimal Point: ' + str(self.opt_x))
     
     def step(self):
         if self.verbose:
@@ -70,7 +80,7 @@ class ProxBundle(OptAlg):
         prox_objective = self.v + cp.power(cp.norm(self.p - self.cur_x,2),2)
         
         prob = cp.Problem(cp.Minimize(prox_objective),self.constraints)
-        prob.solve()
+        prob.solve(solver='CVXOPT',abstol=1e-10, maxiter=100, verbose=True)
         
         # Update current iterate value and update the bundle
         self.cur_x      = self.p.value
