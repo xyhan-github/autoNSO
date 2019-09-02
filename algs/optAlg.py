@@ -11,14 +11,14 @@ import cvxpy as cp
 from IPython import embed
 
 class OptAlg:
-    def __init__(self, objective, max_iter = 1000, x0 = None):
+    def __init__(self, objective, max_iter = 1000, x0 = None, verbose=True):
         
         if type(x0) is not np.ndarray:
             x0 = np.array(x0)
         
         assert len(x0.shape) == 1 # assert initial is vector
         
-        self.max_iter   = 1000
+        self.max_iter   = max_iter
         self.objective  = objective
         
         self.x0         = x0
@@ -27,9 +27,10 @@ class OptAlg:
         self.cur_iter  = 0
         self.cur_x     = None
         self.cur_fx    = None
+        self.path_x      = None
+        self.path_fx     = None
         
-        self.path_x      = np.array([])
-        self.path_fx     = np.array([])
+        self.verbose = verbose
     
     def optimize(self):
 
@@ -43,14 +44,15 @@ class OptAlg:
                 break
     
     def step(self):
-        pass
+        if self.verbose:
+            print('iter: ' + str(self.cur_iter))
     
     def stop_cond(self):
         return False
     
         
 class ProxBundle(OptAlg):
-    def __init__(self, objective, max_iter = 1000, x0 = None):
+    def __init__(self, objective, max_iter = 10, x0 = None):
         super(ProxBundle,self).__init__(objective, max_iter = max_iter, x0 = x0)
         
         self.constraints    = []
@@ -60,9 +62,10 @@ class ProxBundle(OptAlg):
         # Add one bundle point to initial point
         self.cur_x = self.x0
         self.update_bundle()
-        
 
     def step(self):
+        
+        super(ProxBundle,self).step()
         
         prox_objective = self.v + cp.power(cp.norm(self.p - self.cur_x,2),2)
         
@@ -81,9 +84,14 @@ class ProxBundle(OptAlg):
         orcl_call           = self.objective.call_oracle(self.cur_x)
         self.cur_fx         = orcl_call['f']
         self.constraints    += [(self.cur_fx.copy() + 
-                                 orcl_call(self.x0)['df']@(self.p - self.cur_x.copy())) <= self.v]
-        self.path_x         = np.stack((self.path_x, self.cur_x))
-        self.path_fx        = np.stack((self.path_fx, self.cur_fx))
+                                 orcl_call['df'].copy()@(self.p - self.cur_x.copy())) <= self.v]
+    
+        if self.path_x is not None:
+            self.path_x         = np.concatenate((self.path_x, self.cur_x[np.newaxis]))
+            self.path_fx        = np.concatenate((self.path_fx, self.cur_fx[np.newaxis]))
+        else:
+            self.path_x         = self.cur_x[np.newaxis]
+            self.path_fx        = self.cur_fx[np.newaxis]
         
         
     

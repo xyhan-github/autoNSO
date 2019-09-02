@@ -13,6 +13,7 @@ import sys
 sys.path.append('..')
 from obj.objective import Objective
 
+# f(x,y) = |x| + y^2
 def simple2D(x):
     return abs(x[0]) + x[1]**2
 
