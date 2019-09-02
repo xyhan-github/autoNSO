@@ -18,7 +18,9 @@ from algs.optAlg import ProxBundle
 def simple2D(x):
     return abs(x[0]) + x[1]**2
 
+# Create the objective function
 Simple2D = Objective(simple2D)
 
-optAlg = ProxBundle(Simple2D, x0=[2,3])
+# Run prox-bundle optimization algorithm
+optAlg = ProxBundle(Simple2D, x0=[2,3], max_iter=10)
 optAlg.optimize()
