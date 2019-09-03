@@ -72,19 +72,24 @@ class OptAlg:
     
         
 class ProxBundle(OptAlg):
-    def __init__(self, objective, max_iter = 10, x0 = None, mu = 1.0):
+    def __init__(self, objective, max_iter = 10, x0 = None, mu = 1.0, null_k=0.75):
         super(ProxBundle,self).__init__(objective, max_iter = max_iter, x0 = x0)
         
         self.constraints    = []
         self.p              = cp.Variable(self.x_dim) # variable of optimization
         self.v              = cp.Variable() # value of cutting plane model
         self.mu             = mu
+        self.null_k         = null_k
         self.name           = 'ProxBundle'
-        self.name += ' (mu='+str(self.mu)+')'
+        self.name += ' (mu='+str(self.mu)+',null_k='+str(self.null_k)+')'
         
         # Add one bundle point to initial point
         self.cur_x = self.x0
+        self.cur_y = self.x0 # the auxiliary variables will null values
+        self.path_y = None
         self.update_params()
+        
+        self.total_null_serious = 0
 
     def step(self):
         
@@ -96,25 +101,40 @@ class ProxBundle(OptAlg):
         prob.solve()
         
         # Update current iterate value and update the bundle
-        self.cur_x      = self.p.value
-        self.update_params()
+        self.cur_y = self.p.value
         
         # Update paths and bundle constraints
-        self.cur_iter    += 1
-    
-    def update_params(self):
+        self.update_params(self.v.value)
+            
+    def update_params(self, expected):
         
-        orcl_call           = self.objective.call_oracle(self.cur_x)
-        self.cur_fx         = orcl_call['f']
-        self.constraints    += [(self.cur_fx.copy() + 
-                                 orcl_call['df'].copy()@(self.p - self.cur_x.copy())) <= self.v]
-    
-        if self.path_x is not None:
-            self.path_x         = np.concatenate((self.path_x, self.cur_x[np.newaxis]))
-            self.path_fx        = np.concatenate((self.path_fx, self.cur_fx[np.newaxis]))
-        else:
-            self.path_x         = self.cur_x[np.newaxis]
-            self.path_fx        = self.cur_fx[np.newaxis]
+        if self.path_y is not None:
+            self.path_y = np.concatenate((self.path_y, self.cur_y[np.newaxis]))
+        else: 
+            self.path_y = self.cur_y[np.newaxis]
+        
+        orcl_call = self.objective.call_oracle(self.cur_y)
+        cur_fy    = orcl_call['f']
+        
+        # Whether to take a serious step
+        serious = ((self.path_fx[-1] - cur_fy) > self.null_k * (self.path_fx[-1] - expected))
+  
+        if serious:
+            self.cur_x          = self.cur_y
+            self.cur_fx         = orcl_call['f']
+            if self.path_x is not None:
+                self.path_x         = np.concatenate((self.path_x, self.cur_x[np.newaxis]))
+                self.path_fx        = np.concatenate((self.path_fx, self.cur_fx[np.newaxis]))
+            else:
+                self.path_x         = self.cur_x[np.newaxis]
+                self.path_fx        = self.cur_fx[np.newaxis]
+            self.cur_iter       += 1
+        
+        # Even if it is null step, add a constraint to cutting plane model
+        self.constraints    += [(cur_fy.copy() + 
+                                 orcl_call['df'].copy()@(self.p - self.cur_y.copy())) <= self.v]
+        self.total_null_serious += 1
+        
         
 # Subgradient method
 class TorchAlg(OptAlg):
@@ -145,9 +165,6 @@ class TorchAlg(OptAlg):
         # Update current iterate value and update the bundle
         self.cur_x      = self.p.data.numpy().copy()
         self.update_params()
-        
-        # Update paths and bundle constraints
-        self.cur_iter    += 1
     
     def update_params(self):
         
@@ -159,6 +176,9 @@ class TorchAlg(OptAlg):
         else:
             self.path_x         = self.cur_x[np.newaxis]
             self.path_fx        = self.cur_fx[np.newaxis]
+        
+        # Update paths and bundle constraints
+        self.cur_iter    += 1
             
 class Subgradient(TorchAlg):
     def __init__(self, objective, max_iter=10, x0 = None, lr = 1, decay=0.9):
@@ -219,8 +239,5 @@ class LBFGS(TorchAlg):
         # Update current iterate value and update the bundle
         self.cur_x      = self.p.data.numpy().copy()
         self.update_params()
-        
-        # Update paths and bundle constraints
-        self.cur_iter    += 1
         
     
