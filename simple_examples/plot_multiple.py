@@ -17,7 +17,7 @@ from algs.optAlg import ProxBundle, Subgradient
 from vis.visualize import OptPlot
 
 #%%
-# f(x,y) = |x| + y^2
+# f(x,y) = max(|x|,y^2)
 def simple2D(x):
     return torch.max(torch.abs(x[0]),0.5 * x[1]**2)
 
