@@ -30,7 +30,7 @@ optAlg.optimize()
 
 #%% Plot 
 
-opt_plot = OptPlot(opt_algs=[optAlg, optAlg])
+opt_plot = OptPlot(opt_algs=[optAlg])
 
 # Plot prox-bundle optimization path
 #opt_plot.plotPath()
