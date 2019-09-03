@@ -164,10 +164,13 @@ class OptPlot:
         plt.yscale('log')
         plt.xlabel('Iteration')
         plt.ylabel('Objective Value (log-scale)')
-        plt.xticks(np.arange(max_iters + 1))
+        plt.xticks(np.round(np.linspace(0,max_iters + 1,10)))
         
-        ylabs = np.around(np.geomspace(min_f,max_f,num=5),2)
-        plt.yticks(ylabs,ylabs)
+        plt.ylim((min_f,max_f))
+        np.set_printoptions(precision=2)
+        ylabs = np.geomspace(min_f,max_f,num=5)
+        ylabs_prt = ["{0:0.2e}".format(float(i)) for i in ylabs]
+        plt.yticks(ylabs,ylabs_prt)
             
         plt.legend()
         plt.show()

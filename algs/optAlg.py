@@ -9,6 +9,7 @@ import numpy as np
 import cvxpy as cp
 import torch
 import torch.optim as optim
+from torch.optim.lr_scheduler import StepLR
 
 from IPython import embed
 
@@ -94,7 +95,7 @@ class ProxBundle(OptAlg):
         
         # Update current iterate value and update the bundle
         self.cur_x      = self.p.value
-        self.update_bundle()
+        self.update_params()
         
         # Update paths and bundle constraints
         self.cur_iter    += 1
@@ -114,28 +115,21 @@ class ProxBundle(OptAlg):
             self.path_fx        = self.cur_fx[np.newaxis]
         
 # Subgradient method
-class Subgradient(OptAlg):
-    def __init__(self, objective, max_iter=10, x0 = None, lr = 1):
-        super(ProxBundle,self).__init__(objective, max_iter = max_iter, x0 = x0)
-        self.name = 'Subgradient'
-        self.name += ' (lr=' + str(lr)+')'
-        
-        self.lr = lr
+class TorchAlg(OptAlg):
+    def __init__(self, objective, max_iter=10, x0 = None):
+        super(TorchAlg,self).__init__(objective, max_iter = max_iter, x0 = x0)
         
         # Add one bundle point to initial point
-        self.cur_x = self.x0
+        self.cur_x  = self.x0
         self.update_params()
         
         # Set up criterion and thing to be optimized
         self.criterion = self.objective.obj_func
-        self.p         = torch.tensor(self.x0,requires_grad=True)
+        self.p         = torch.tensor(self.x0,dtype=torch.float,requires_grad=True)
         
-        # SGD without batches and momentum reduces to subgradient descent
-        self.optimizer = optim.SGD(self.p, lr=self.lr, momentum=0)
-
     def step(self):
         
-        super(ProxBundle,self).step()
+        super(TorchAlg,self).step()
         
         # zero the parameter gradients
         self.optimizer.zero_grad()
@@ -144,16 +138,18 @@ class Subgradient(OptAlg):
         value = self.criterion(self.p)
         value.backward()
         self.optimizer.step()
+        self.scheduler.step()
         
         # Update current iterate value and update the bundle
         self.cur_x      = self.p.data.numpy().copy()
-        self.cur_fx     = value.data.numpy().copy()
-        self.update_bundle()
+        self.update_params()
         
         # Update paths and bundle constraints
         self.cur_iter    += 1
     
     def update_params(self):
+        
+        self.cur_fx = self.objective.call_oracle(self.cur_x)['f']
     
         if self.path_x is not None:
             self.path_x         = np.concatenate((self.path_x, self.cur_x[np.newaxis]))
@@ -161,5 +157,19 @@ class Subgradient(OptAlg):
         else:
             self.path_x         = self.cur_x[np.newaxis]
             self.path_fx        = self.cur_fx[np.newaxis]
+            
+class Subgradient(TorchAlg):
+    def __init__(self, objective, max_iter=10, x0 = None, lr = 1, decay=0.9):
+        super(Subgradient,self).__init__(objective, max_iter = max_iter, x0 = x0)
+        
+        self.lr = lr
+        self.decay = decay
+        self.name = 'Subgradient'
+        self.name += ' (lr=' + str(self.lr)+',decay='+str(self.decay)+')'
+        
+        # SGD without batches and momentum reduces to subgradient descent
+        self.optimizer = optim.SGD([self.p], lr=self.lr, momentum=0)
+        self.scheduler = StepLR(self.optimizer, step_size=1, gamma=self.decay)
+
         
     
