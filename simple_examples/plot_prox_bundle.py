@@ -28,7 +28,12 @@ Simple2D = Objective(simple2D)
 optAlg = ProxBundle(Simple2D, x0=[10,3], max_iter=20)
 optAlg.optimize()
 
-#%%
+#%% Plot 
 
 opt_plot = OptPlot(opt_algs=[optAlg, optAlg])
-opt_plot.plot()
+
+# Plot prox-bundle optimization path
+#opt_plot.plotPath()
+
+# Plot prox-bundle loss by iteration
+opt_plot.plotValue()
