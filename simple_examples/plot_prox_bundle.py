@@ -30,5 +30,5 @@ optAlg.optimize()
 
 #%%
 
-opt_plot = OptPlot(opt_algs=optAlg)
+opt_plot = OptPlot(opt_algs=[optAlg, optAlg])
 opt_plot.plot()
