@@ -14,6 +14,8 @@ class OptPlot:
         
         # List of optimization algorithms
         self.opt_algs = []
+        self.x_dim    = None
+        self.obj_func = None
         
         # Add to list of algorithms to compare at initialization
         if opt_algs is not None:
@@ -34,10 +36,16 @@ class OptPlot:
         self.opt_algs += opt_algs
         
         # Do a check to make sure all algorithms match
+        # After checking set the x_dim and obj_func to be the common one
         self.do_check()
     
-    def plot(self):
-        pass
+    def plot2D(self):
+        assert len(self.opt_algs) > 0
+        assert self.x_dim == 1 # 1D domain for 2D plot
+    
+    def plot3D(self):
+        assert len(self.opt_algs) > 0
+        assert self.x_dim == 2 # 2D domain for 3D plot
     
     # check that all optimization algorithms have the same objective and inputs
     def do_check(self):
@@ -49,5 +57,8 @@ class OptPlot:
         for alg in self.opt_algs:
             assert alg.x_dim == ref_alg.x_dim
             assert alg.objective.obj_func == ref_alg.objective.obj_func
+        
+        self.x_dim      = ref_alg.x_dim
+        self.obj_func   = ref_alg.obj_func
         
         
