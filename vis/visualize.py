@@ -25,15 +25,15 @@ class OptPlot:
         if opt_algs is not None:
             self.add_alg(opt_algs)
             
+        self.x1_max = None
+        self.x2_max = None
+        self.x1_min = None
+        self.x2_min = None
+            
         if plot_lims is not None:
-            assert list(plot_lims.keys()) == ['x1_max', 'x2_max', 'x1_min', 'x2_min']
             for key in plot_lims:
+                assert key in ['x1_max', 'x2_max', 'x1_min', 'x2_min']
                 setattr(self, key, plot_lims[key])
-        else:
-            self.x1_max = None
-            self.x2_max = None
-            self.x1_min = None
-            self.x2_min = None
         
         self.axis_rot = axis_rot
         plt.style.use('seaborn-white')
@@ -72,30 +72,26 @@ class OptPlot:
         assert len(self.opt_algs) > 0
         assert self.x_dim == 2 # 2D domain for 3D plot
         
-        if self.x1_max is None:
-            # get max and min ranges for x1 and x2
-            self.x1_max = float('-inf')
-            self.x1_min = float('inf')
-            self.x2_max = float('-inf')
-            self.x2_min = float('inf')
+        # Set unset limits
+        if None in [self.x1_max, self.x1_min, self.x2_max, self.x2_min]:
+            x1_lim = float('-inf')
+            x2_lim = float('-inf')
             
             for alg in self.opt_algs:
-                # Find the max and min of the paths
-                path_max = np.max(alg.path_x,axis=0)
-                path_min = np.min(alg.path_x,axis=0)
-                if path_max[0] > self.x1_max:
-                    self.x1_max = path_max[0]
-                if path_max[1] > self.x2_max:
-                    self.x2_max = path_max[1]
-                if path_min[0] < self.x1_min:
-                    self.x1_min = path_min[0]
-                if path_min[1] < self.x2_min:
-                    self.x2_min = path_min[1]
+                path_max = np.max(np.abs(alg.path_x),axis=0)
+                if path_max[0] > x1_lim:
+                    x1_lim = path_max[0]
+                if path_max[1] > x2_lim:
+                    x2_lim = path_max[1]
             
-            self.x1_max += 0.2 * abs(self.x1_max)
-            self.x2_max += 0.2 * abs(self.x2_max)
-            self.x1_min -= 0.2 * abs(self.x1_max)
-            self.x2_min -= 0.2 * abs(self.x2_max)
+            if self.x1_max == None:
+                self.x1_max = 1.2 * x1_lim
+            if self.x1_min == None:
+                self.x1_min = -1.2 * x1_lim
+            if self.x2_max == None:
+                self.x2_max = 1.2 * x2_lim
+            if self.x2_min == None:
+                self.x2_min = -1.2 * x2_lim
         
         x1 = np.linspace(self.x1_min,self.x1_max,100)
         x2 = np.linspace(self.x2_min,self.x2_max,100)
