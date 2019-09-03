@@ -13,7 +13,7 @@ import sys
 sys.path.append('..')
 import torch
 from obj.objective import Objective
-from algs.optAlg import ProxBundle, Subgradient, Nesterov
+from algs.optAlg import ProxBundle, Subgradient, Nesterov, LBFGS
 from vis.visualize import OptPlot
 
 #%%
@@ -31,10 +31,13 @@ optAlg2 = Subgradient(Simple2D, x0=[10,3], max_iter=50)
 optAlg2.optimize()
 optAlg3 = Nesterov(Simple2D, x0=[10,3], max_iter=50)
 optAlg3.optimize()
+optAlg4 = LBFGS(Simple2D, x0=[10,3], max_iter=50)
+optAlg4.optimize()
+
 
 #%% Plot 
 
-opt_plot = OptPlot(opt_algs=[optAlg1, optAlg2, optAlg3])
+opt_plot = OptPlot(opt_algs=[optAlg1, optAlg2, optAlg3, optAlg4])
 
 # Plot prox-bundle optimization path
 opt_plot.plotPath()

@@ -201,4 +201,24 @@ class LBFGS(TorchAlg):
         self.optimizer = optim.LBFGS([self.p], lr=self.lr, history_size=self.hist)
         self.scheduler = StepLR(self.optimizer, step_size=1, gamma=self.decay)
         
+    def step(self):
+        
+        super(TorchAlg,self).step()
+        
+        def closure():
+            self.optimizer.zero_grad()
+            value = self.criterion(self.p)
+            value.backward()
+            return value
+        
+        self.optimizer.step(closure)
+        self.scheduler.step()
+        
+        # Update current iterate value and update the bundle
+        self.cur_x      = self.p.data.numpy().copy()
+        self.update_params()
+        
+        # Update paths and bundle constraints
+        self.cur_iter    += 1
+        
     
