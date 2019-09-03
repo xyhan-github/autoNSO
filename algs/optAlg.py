@@ -34,6 +34,8 @@ class OptAlg:
         
         self.opt_x     = None
         self.opt_fx    = None
+        
+        self.name = None
     
     def optimize(self):
 
@@ -68,6 +70,7 @@ class ProxBundle(OptAlg):
         self.constraints    = []
         self.p              = cp.Variable(self.x_dim) # variable of optimization
         self.v              = cp.Variable() # value of cutting plane model
+        self.name           = 'ProxBundle'
         
         # Add one bundle point to initial point
         self.cur_x = self.x0
