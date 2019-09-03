@@ -32,11 +32,22 @@ class OptPlot:
             
         # Add to list of optimization algorithms
         self.opt_algs += opt_algs
+        
+        # Do a check to make sure all algorithms match
+        self.do_check()
     
     def plot(self):
         pass
     
     # check that all optimization algorithms have the same objective and inputs
     def do_check(self):
-        for alg in opt_algs:
+        
+        # Use the first algorithm's dimension and objective as reference
+        ref_alg = self.opt_algs[0]
+        
+        # Check that dimensions of input are all the same
+        for alg in self.opt_algs:
+            assert alg.x_dim == ref_alg.x_dim
+            assert alg.objective.obj_func == ref_alg.objective.obj_func
+        
         
