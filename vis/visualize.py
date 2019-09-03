@@ -6,7 +6,9 @@ Created on Mon Sep  2 16:32:35 2019
 @author: Xiaoyan
 """
 import torch
+import itertools
 import numpy as np
+import seaborn as sns
 from algs.optAlg import OptAlg
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
@@ -49,7 +51,7 @@ class OptPlot:
         else:
             # Check every element is an optimization algorithm
             for alg in opt_algs:
-                assert isinstance(opt_algs, OptAlg)
+                assert isinstance(alg, OptAlg)
             
         # Add to list of optimization algorithms
         self.opt_algs += opt_algs
@@ -116,11 +118,14 @@ class OptPlot:
         ax.set_ylabel('x2')
         ax.view_init(self.axis_rot[0], self.axis_rot[1])
         
+        palette = itertools.cycle(sns.color_palette())
+        markers = itertools.cycle(('*', '.', 'X', '^', 'D')) 
+        
         # Plot optimization path
         for alg in self.opt_algs:
             alg.path_x[:,0]
             ax.plot(alg.path_x[:,0],alg.path_x[:,1], alg.path_fx,
-                    color = 'r', marker = '*', alpha = .4, label = alg.name)
+                    color = next(palette), marker = next(markers), alpha = .4, label = alg.name)
         plt.legend()
         plt.show()
 
