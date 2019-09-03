@@ -10,7 +10,9 @@ Currently, the software is capable of the following methods:
 * Nesterov Accelerated Subgradient Descent
 * L-BFGS
 
-Some simple examples are in the `simple_examples`  folder. In particular, the following two plots were generated using only 14 lines of code (see `simple_examples/plot_multiple.py`):
+Defining new optimization algorithms for one's own use is easy: just modify the code in `algs/optAlg.py`.
+
+Quick examples are in the  `simple_examples`  folder. In particular, the following two plots were generated using only 14 lines of code (see `simple_examples/plot_multiple.py`) for the objective function $f(x,y) = \max(|x|,y^2)$:
 
 
 
