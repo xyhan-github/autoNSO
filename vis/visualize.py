@@ -60,22 +60,22 @@ class OptPlot:
         # After checking set the x_dim and obj_func to be the common one
         self.do_check()
         
-    def plot(self):
+    def plotPath(self):
         assert self.x_dim is not None
         
         if self.x_dim == 2:
-            self.plot3D()
+            self.plotPath3D()
         else:
             raise Exception('Plotting for this type of objective not implemented yet')
     
     # Plots for one dimensional input functions.
     # Coming soon...
-    def plot2D(self):
+    def plotPath2D(self):
         assert len(self.opt_algs) > 0
         assert self.x_dim == 1 # 1D domain for 2D plot
     
     # Plot for objective function of two inputs
-    def plot3D(self):
+    def plotPath3D(self):
         assert len(self.opt_algs) > 0
         assert self.x_dim == 2 # 2D domain for 3D plot
         
@@ -129,6 +129,46 @@ class OptPlot:
             alg.path_x[:,0]
             ax.plot(alg.path_x[:,0],alg.path_x[:,1], alg.path_fx,
                     color = next(palette), marker = next(markers), alpha = .4, label = alg.name)
+        plt.legend()
+        plt.show()
+        
+    # Plot for objective function of two inputs
+    def plotValue(self):
+        assert len(self.opt_algs) > 0
+        
+        fig = plt.figure(figsize = (10,10))
+        ax  = fig.add_subplot(111)
+        
+        # Plot optimization path
+        palette = itertools.cycle(sns.color_palette())
+        markers = itertools.cycle(('*', '.', 'X', '^', 'D')) 
+        
+        max_iters = float('-inf')
+        max_f     = float('-inf')
+        min_f     = float('inf')
+        
+        for alg in self.opt_algs:
+            ax.plot(np.arange(alg.total_iter+1),alg.path_fx,
+                    color = next(palette), marker = next(markers),
+                    alpha = .4, label = alg.name)
+            
+            if alg.total_iter > max_iters:
+                max_iters = alg.total_iter
+                
+            if max(alg.path_fx) > max_f:
+                max_f = max(alg.path_fx)
+            if min(alg.path_fx) < min_f:
+                min_f = min(alg.path_fx)
+            
+                
+        plt.yscale('log')
+        plt.xlabel('Iteration')
+        plt.ylabel('Objective Value (log-scale)')
+        plt.xticks(np.arange(max_iters + 1))
+        
+        ylabs = np.around(np.geomspace(min_f,max_f,num=5),2)
+        plt.yticks(ylabs,ylabs)
+            
         plt.legend()
         plt.show()
 

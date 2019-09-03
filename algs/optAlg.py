@@ -34,6 +34,7 @@ class OptAlg:
         
         self.opt_x     = None
         self.opt_fx    = None
+        self.total_iter = None
         
         self.name = None
     
@@ -50,6 +51,7 @@ class OptAlg:
 
         self.opt_x = self.path_x[-1]
         self.opt_fx = self.path_fx[-1]
+        self.total_iter = self.cur_iter
         
         if self.verbose:
             print('Optimal Value: ' + str(self.opt_fx))
