@@ -34,13 +34,8 @@ optAlg3.optimize()
 optAlg4 = LBFGS(Simple2D, x0=[10,3], max_iter=50)
 optAlg4.optimize()
 
-
 #%% Plot 
 
 opt_plot = OptPlot(opt_algs=[optAlg1, optAlg2, optAlg3, optAlg4])
-
-# Plot prox-bundle optimization path
-opt_plot.plotPath()
-
-# Plot prox-bundle loss by iteration
-opt_plot.plotValue()
+opt_plot.plotPath() # Plot prox-bundle optimization path
+opt_plot.plotValue() # Plot prox-bundle loss by iteration
