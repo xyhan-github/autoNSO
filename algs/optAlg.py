@@ -188,7 +188,7 @@ class Nesterov(TorchAlg):
         
 class LBFGS(TorchAlg):
     def __init__(self, objective, max_iter=10, x0 = None, lr = 1, decay=0.9, hist=100):
-        super(Nesterov,self).__init__(objective, max_iter = max_iter, x0 = x0)
+        super(LBFGS,self).__init__(objective, max_iter = max_iter, x0 = x0)
         
         self.lr = lr
         self.decay = decay
