@@ -83,7 +83,7 @@ class ProxBundle(OptAlg):
         prox_objective = self.v + cp.power(cp.norm(self.p - self.cur_x,2),2)
         
         prob = cp.Problem(cp.Minimize(prox_objective),self.constraints)
-        prob.solve(solver='CVXOPT',abstol=1e-10, maxiter=100)
+        prob.solve()
         
         # Update current iterate value and update the bundle
         self.cur_x      = self.p.value

@@ -5,6 +5,7 @@ Created on Mon Sep  2 16:32:35 2019
 
 @author: Xiaoyan
 """
+import torch
 import numpy as np
 from algs.optAlg import OptAlg
 import matplotlib.pyplot as plt
@@ -14,7 +15,7 @@ from IPython import embed
 
 # We can also make an object that compares multiple paths
 class OptPlot:
-    def __init__(self,opt_algs=None, plot_lims=None, axis_rot=(0,0)):
+    def __init__(self,opt_algs=None, plot_lims=None, axis_rot=(0,0), resolution=250):
         
         # List of optimization algorithms
         self.opt_algs = []
@@ -37,6 +38,7 @@ class OptPlot:
         
         self.axis_rot = axis_rot
         plt.style.use('seaborn-white')
+        self.resolution = 250
             
     def add_alg(self,opt_algs):
         
@@ -93,11 +95,16 @@ class OptPlot:
             if self.x2_min == None:
                 self.x2_min = -1.2 * x2_lim
         
-        x1 = np.linspace(self.x1_min,self.x1_max,100)
-        x2 = np.linspace(self.x2_min,self.x2_max,100)
+        x1 = np.linspace(self.x1_min,self.x1_max,self.resolution)
+        x2 = np.linspace(self.x2_min,self.x2_max,self.resolution)
         x1_grid, x2_grid = np.meshgrid(x1, x2)
         
-        f = lambda x1, x2: self.obj_func([x1,x2])
+        def f(x1, x2):
+            val = self.obj_func(torch.tensor([x1,x2]))
+            try:
+                return val.data.numpy()
+            except:
+                return val
         vf = np.vectorize(f)
         fx_grid = vf(x1_grid, x2_grid)
 
