@@ -164,7 +164,7 @@ class OptPlot:
         plt.yscale('log')
         plt.xlabel('Iteration')
         plt.ylabel('Objective Value (log-scale)')
-        plt.xticks(np.round(np.linspace(0,max_iters + 1,10)))
+        plt.xticks(np.round(np.linspace(0,max_iters,10)))
         
         plt.ylim((min_f,max_f))
         np.set_printoptions(precision=2)

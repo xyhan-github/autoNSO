@@ -44,12 +44,9 @@ class OptAlg:
     def optimize(self):
 
         # Run the optimization algorithm until a stopping condition is hit
-        stop = False
-        for i in range(self.max_iter):
-            self.step()
-            stop = self.stop_cond()
-            
-            if stop:
+        while self.cur_iter <= self.max_iter:
+            self.step()            
+            if self.stop_cond():
                 break
 
         self.opt_x = self.path_x[-1]
@@ -87,9 +84,8 @@ class ProxBundle(OptAlg):
         self.cur_x = self.x0
         self.cur_y = self.x0 # the auxiliary variables will null values
         self.path_y = None
-        self.update_params()
-        
         self.total_null_serious = 0
+        self.update_params(None)
 
     def step(self):
         
@@ -117,7 +113,10 @@ class ProxBundle(OptAlg):
         cur_fy    = orcl_call['f']
         
         # Whether to take a serious step
-        serious = ((self.path_fx[-1] - cur_fy) > self.null_k * (self.path_fx[-1] - expected))
+        if expected is not None:
+            serious = ((self.path_fx[-1] - cur_fy) > self.null_k * (self.path_fx[-1] - expected))
+        else:
+            serious = True
   
         if serious:
             self.cur_x          = self.cur_y
