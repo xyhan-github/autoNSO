@@ -67,6 +67,8 @@ class OptPlot:
             self.plot2D()
         elif self.x_dim == 2:
             self.plot3D()
+        else:
+            raise Exception('Plotting for this type of objective not implemented yet')
     
     def plot2D(self):
         assert len(self.opt_algs) > 0
