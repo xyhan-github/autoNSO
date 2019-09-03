@@ -104,10 +104,8 @@ class OptPlot:
         f = lambda x1, x2: self.obj_func([x1,x2])
         vf = np.vectorize(f)
         fx_grid = vf(x1_grid, x2_grid)
-        
-        
-        
-        #Surface plot
+
+        #Plot objective
         fig = plt.figure(figsize = (10,10))
         ax  = fig.add_subplot(111, projection='3d')
         ax.plot_surface(x1_grid,x2_grid,fx_grid,rstride = 5, cstride = 5, cmap = 'jet', alpha = .4, edgecolor = 'none' )
@@ -115,7 +113,7 @@ class OptPlot:
         ax.set_ylabel('x2')
         ax.view_init(self.axis_rot[0], self.axis_rot[1])
         
-        # Plot plots points of algorithm
+        # Plot optimization path
         for alg in self.opt_algs:
             alg.path_x[:,0]
             ax.plot(alg.path_x[:,0],alg.path_x[:,1], alg.path_fx,
