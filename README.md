@@ -1,19 +1,30 @@
 # autoNSO
 Naive implementations of common non-smooth optimization (NSO) methods using PyTorch auto-differentiation as the subgradient oracle.  
 
-Many academic works assume one does not "see" the explicit form of the objective function of an optimization problem. Instead, one can only evaluate the function at certain points as well as obtain one subgradient in the subdifferential of the function at that point ("make oracle calls"). Under that setting, autoNSO is designed for comparing and benchmarking the convergence rates and step-wise optimization paths of common NSO algorithms on an arbitrary objective function.  
+Many academic works assume one does not "see" the explicit form of the objective function of an optimization problem. Instead, one can only evaluate the function at certain points as well as obtain one subgradient in the subdifferential of the function at that point ("make oracle calls"). Under that setting, autoNSO is designed for comparing and benchmarking the convergence rates and step-wise optimization paths of common NSO algorithms on an arbitrary objective function. 
+
+Currently, the software is capable of the following methods:
+
+* Prox-Bundle
+* Subgradient Descent
+* Nesterov Accelerated Subgradient Descent
+* L-BFGS
+
+Some simple examples are in the `simple_examples`  folder.
+
+
 
 Maintainer:   X.Y. Han, Cornell University ORIE\
 Contact:      xiaoyanhn@gmail.com
 
 Please cite:
 
-> X.Y. Han, *autoNSO: Naive Implementations of Common NSO Methods with Auto-differentiation*, (2019), GitHub repository, https://github.com/xiaoyanh/autoNSO
+> X.Y. Han, *autoNSO: Implementations of Common NSO Methods with Auto-differentiation*, (2019), GitHub repository, https://github.com/xiaoyanh/autoNSO
 
 ```
 @misc{Han2019,
   author = {Han, X.Y.},
-  title = {autoNSO: Naive Implementations of Common NSO Methods with Auto-differentiation},
+  title = {autoNSO: Implementations of Common NSO Methods with Auto-differentiation},
   year = {2019},
   publisher = {GitHub},
   journal = {GitHub repository},
