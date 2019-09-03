@@ -63,17 +63,18 @@ class OptPlot:
     def plot(self):
         assert self.x_dim is not None
         
-        if self.x_dim == 1:
-            self.plot2D()
-        elif self.x_dim == 2:
+        if self.x_dim == 2:
             self.plot3D()
         else:
             raise Exception('Plotting for this type of objective not implemented yet')
     
+    # Plots for one dimensional input functions.
+    # Coming soon...
     def plot2D(self):
         assert len(self.opt_algs) > 0
         assert self.x_dim == 1 # 1D domain for 2D plot
     
+    # Plot for objective function of two inputs
     def plot3D(self):
         assert len(self.opt_algs) > 0
         assert self.x_dim == 2 # 2D domain for 3D plot
