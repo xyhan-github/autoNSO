@@ -1,7 +1,7 @@
 # autoNSO
 Naive implementations of common non-smooth optimization (NSO) methods using PyTorch auto-differentiation as the subgradient oracle.  
 
-Many academic works assume one does not "see" the explicit form of the objective function of an optimization problem. Instead, one can only evaluate the function at certain points as well as obtain one subgradient in the subdifferential of the function at that point ("make oracle calls"). Under that setting, autoNSO is designed for comparing and benchmarking the convergence rates and step-wise optimization paths of common NSO algorithms on an arbitrary objective function. This code is unlike most NSO code in that one **does not need to define the subgradient oracle**; instead, the subgradient is calculated automatically using PyTorch autodifferentiation.
+Research in non-smooth optimization often assume that one does not "see" the explicit form of the objective function. Instead, one can only evaluate the function at certain points as well as obtain one subgradient in the subdifferential of the function at that point ("make oracle calls"). Under that setting, autoNSO is designed for comparing and benchmarking the convergence rates and step-wise optimization paths of common NSO algorithms on an arbitrary objective function. This code is unlike most NSO code in that one **does not need to define the subgradient oracle**; instead, the subgradient is calculated automatically using PyTorch **autodifferentiation**.
 
 Currently, the software is capable of the following methods:
 
