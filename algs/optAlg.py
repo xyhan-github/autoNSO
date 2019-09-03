@@ -171,5 +171,34 @@ class Subgradient(TorchAlg):
         self.optimizer = optim.SGD([self.p], lr=self.lr, momentum=0)
         self.scheduler = StepLR(self.optimizer, step_size=1, gamma=self.decay)
 
+class Nesterov(TorchAlg):
+    def __init__(self, objective, max_iter=10, x0 = None, lr = 1, decay=0.9, momentum=0.9):
+        super(Nesterov,self).__init__(objective, max_iter = max_iter, x0 = x0)
+        
+        self.lr = lr
+        self.decay = decay
+        self.momentum = 0.9
+        self.name = 'Nesterov'
+        self.name += (' (lr=' + str(self.lr)+',decay='+str(self.decay)
+                        +',mom='+str(self.momentum)+')')
+        
+        # SGD without batches and momentum reduces to subgradient descent
+        self.optimizer = optim.SGD([self.p], lr=self.lr, momentum=self.momentum)
+        self.scheduler = StepLR(self.optimizer, step_size=1, gamma=self.decay)
+        
+class LBFGS(TorchAlg):
+    def __init__(self, objective, max_iter=10, x0 = None, lr = 1, decay=0.9, hist=100):
+        super(Nesterov,self).__init__(objective, max_iter = max_iter, x0 = x0)
+        
+        self.lr = lr
+        self.decay = decay
+        self.hist  = hist
+        self.name = 'LBFGS'
+        self.name += (' (lr=' + str(self.lr)+',decay='+str(self.decay)
+                        +',hist='+str(self.hist)+')')
+        
+        # SGD without batches and momentum reduces to subgradient descent
+        self.optimizer = optim.LBFGS([self.p], lr=self.lr, history_size=self.hist)
+        self.scheduler = StepLR(self.optimizer, step_size=1, gamma=self.decay)
         
     
