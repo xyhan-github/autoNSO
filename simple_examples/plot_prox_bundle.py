@@ -33,7 +33,7 @@ optAlg.optimize()
 opt_plot = OptPlot(opt_algs=[optAlg])
 
 # Plot prox-bundle optimization path
-#opt_plot.plotPath()
+opt_plot.plotPath()
 
 # Plot prox-bundle loss by iteration
 opt_plot.plotValue()
