@@ -14,7 +14,11 @@ Defining new optimization algorithms for one's own use is easy: just modify the 
 
 Quick examples are in the  `simple_examples`  folder. In particular, the following two plots were generated using only 14 lines of code (see `simple_examples/plot_multiple.py`) for the objective function $f(x,y) = \max(|x|,y^2)$:
 
-![](./aux/path_plot_ex.png){:height="25%" width="25%"}
+     <img src="./aux/path_plot_ex.png" alt="drawing" width="4in"/> <img src="./aux/value_plot_ex.png" alt="drawing" width="4in"/>  
+
+
+
+
 
 Maintainer:   X.Y. Han, Cornell University ORIE\
 Contact:      xiaoyanhn@gmail.com
