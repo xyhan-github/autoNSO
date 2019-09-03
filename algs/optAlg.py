@@ -72,13 +72,15 @@ class OptAlg:
     
         
 class ProxBundle(OptAlg):
-    def __init__(self, objective, max_iter = 10, x0 = None):
+    def __init__(self, objective, max_iter = 10, x0 = None, mu = 1.0):
         super(ProxBundle,self).__init__(objective, max_iter = max_iter, x0 = x0)
         
         self.constraints    = []
         self.p              = cp.Variable(self.x_dim) # variable of optimization
         self.v              = cp.Variable() # value of cutting plane model
+        self.mu             = mu
         self.name           = 'ProxBundle'
+        self.name += ' (mu='+str(self.mu)+')'
         
         # Add one bundle point to initial point
         self.cur_x = self.x0
@@ -88,7 +90,7 @@ class ProxBundle(OptAlg):
         
         super(ProxBundle,self).step()
         
-        prox_objective = self.v + cp.power(cp.norm(self.p - self.cur_x,2),2)
+        prox_objective = self.v + 0.5 * (1.0/(2.0 * self.mu)) * cp.power(cp.norm(self.p - self.cur_x,2),2)
         
         prob = cp.Problem(cp.Minimize(prox_objective),self.constraints)
         prob.solve()
