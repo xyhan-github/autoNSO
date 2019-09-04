@@ -5,7 +5,7 @@ Research in non-smooth optimization often assume that one does not "see" the exp
 
 Currently, the software is capable of the following common first-order and quasi-methods:
 
-* Prox-Bundle
+* Prox-Bundle (https://link.springer.com/article/10.1007/BF01585170, Section 4)
 * Subgradient Descent
 * Nesterov Accelerated Subgradient Descent
 * L-BFGS
