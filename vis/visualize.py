@@ -116,12 +116,12 @@ class OptPlot:
         #Plot objective
         fig = plt.figure(figsize = (10,10))
         ax  = fig.add_subplot(111, projection='3d')
-        ax.plot_surface(x1_grid,x2_grid,fx_grid,rstride = 5, cstride = 5, cmap = 'jet', alpha = .4, edgecolor = 'none' )
+        ax.plot_surface(x1_grid,x2_grid,fx_grid,rstride = 5, cstride = 5, cmap = 'jet', alpha = .3, edgecolor = 'none' )
         ax.set_xlabel('x1')
         ax.set_ylabel('x2')
         ax.view_init(self.axis_rot[0], self.axis_rot[1])
         
-        palette = itertools.cycle(sns.color_palette())
+        palette = itertools.cycle(sns.hls_palette(len(self.opt_algs), l=.3, s=.8))
         markers = itertools.cycle(('*', '.', 'X', '^', 'D')) 
         
         # Plot optimization path
@@ -140,7 +140,7 @@ class OptPlot:
         ax  = fig.add_subplot(111)
         
         # Plot optimization path
-        palette = itertools.cycle(sns.color_palette())
+        palette = itertools.cycle(sns.hls_palette(len(self.opt_algs), l=.3, s=.8))
         markers = itertools.cycle(('*', '.', 'X', '^', 'D')) 
         
         max_iters = float('-inf')
@@ -148,7 +148,7 @@ class OptPlot:
         min_f     = float('inf')
         
         for alg in self.opt_algs:
-            ax.plot(np.arange(alg.total_iter+1),alg.path_fx,
+            ax.plot(np.arange(alg.total_iter),alg.path_fx,
                     color = next(palette), marker = next(markers),
                     alpha = .4, label = alg.name)
             

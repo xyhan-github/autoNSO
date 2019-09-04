@@ -94,6 +94,12 @@ class ProxBundle(OptAlg):
         prox_objective = self.v + 0.5 * (1.0/(2.0 * self.mu)) * cp.power(cp.norm(self.p - self.cur_x,2),2)
         
         prob = cp.Problem(cp.Minimize(prox_objective),self.constraints)
+        
+        # Use MOSEK for accuracy
+#        m_params = {'MSK_DPAR_INTPNT_CO_TOL_PFEAS':1e-12}
+#        prob.solve(solver=cp.MOSEK,mosek_params=m_params)
+        
+        # If you don't have mosek just do:
         prob.solve()
         
         # Update current iterate value and update the bundle
