@@ -116,6 +116,7 @@ class OptPlot:
         #Plot objective
         fig = plt.figure(figsize = (10,10))
         ax  = fig.add_subplot(111, projection='3d')
+        ax.plot_wireframe(x1_grid,x2_grid,fx_grid, rstride=5, cstride=5, alpha=0.3, linewidths=0.1, colors='black')
         ax.plot_surface(x1_grid,x2_grid,fx_grid,rstride = 5, cstride = 5, cmap = 'jet', alpha = .3, edgecolor = 'none' )
         ax.set_xlabel('x1')
         ax.set_ylabel('x2')
@@ -128,7 +129,7 @@ class OptPlot:
         for alg in self.opt_algs:
             alg.path_x[:,0]
             ax.plot(alg.path_x[:,0],alg.path_x[:,1], alg.path_fx,
-                    color = next(palette), marker = next(markers), alpha = .4, label = alg.name)
+                    color = next(palette), marker = next(markers), alpha = .6, label = alg.name)
         plt.legend()
         plt.show()
         
