@@ -69,7 +69,7 @@ class OptAlg:
     
         
 class ProxBundle(OptAlg):
-    def __init__(self, objective, max_iter = 10, x0 = None, mu = 1.0, null_k=0.75):
+    def __init__(self, objective, max_iter = 10, x0 = None, mu = 1.0, null_k=0.5):
         super(ProxBundle,self).__init__(objective, max_iter = max_iter, x0 = x0)
         
         self.constraints    = []
