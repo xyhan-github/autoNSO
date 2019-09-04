@@ -29,7 +29,7 @@ opt_plot.plotValue()
 
 
 
-![](./aux/both_plot.png) 
+![](./aux/plot_both.png) 
 
 Maintainer:   X.Y. Han, Cornell University ORIE\
 Contact:      xiaoyanhn@gmail.com
