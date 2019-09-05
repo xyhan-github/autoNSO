@@ -91,7 +91,7 @@ class ProxBundle(OptAlg):
         
         super(ProxBundle,self).step()
         
-        prox_objective = self.v + 0.5 * (1.0/(2.0 * self.mu)) * cp.power(cp.norm(self.p - self.cur_x,2),2)
+        prox_objective = self.v + 0.5 * (self.mu/2.0) * cp.power(cp.norm(self.p - self.cur_x,2),2)
         
         prob = cp.Problem(cp.Minimize(prox_objective),self.constraints)
         
