@@ -89,7 +89,8 @@ class Nesterov(TorchAlg):
 
 
 class BFGS(TorchAlg):
-    def __init__(self, objective, lr=1, hist=float('inf'), linesearch='strong_wolfe', ls_params=None,
+    def __init__(self, objective, lr=1e1, hist=float('inf'), linesearch='strong_wolfe',
+                 ls_params={'c1':0.1, 'c2':(1-1e-2), 'max_ls':1e3},
                  tolerance_change=1e-9, tolerance_grad=1e-7, store_hessian=False, **kwargs):
         super(BFGS, self).__init__(objective, **kwargs)
 
