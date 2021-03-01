@@ -170,7 +170,7 @@ class OptPlot:
         # Plot optimization path
         for alg in self.opt_algs:
             if domain_sz == 2:
-                ax.plot(alg.path_x[:,0],alg.path_x[:,1], alg.path_fx,
+                ax.plot(alg.path_x[:,0],alg.path_x[:,1], alg.path_fx.flatten(),
                         color = next(palette), marker = next(markers), alpha = .6, label = alg.name)
             elif domain_sz == 3:
                 ax.plot(alg.path_x[:, 0], alg.path_x[:, 1], alg.path_x[:, 2],
