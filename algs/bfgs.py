@@ -65,7 +65,7 @@ def _lewis_overton(obj_func,
 
         if f_new > (f + c1 * t * gtd): # If S(t) fails
             beta = t
-        elif gtd_new > c2 * gtd: # If C(t) fails
+        elif gtd_new < c2 * gtd: # If C(t) fails
             alpha = t
         else:
             break
