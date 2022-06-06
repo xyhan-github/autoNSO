@@ -89,9 +89,7 @@ class Nesterov(TorchAlg):
 
 
 class BFGS(TorchAlg):
-    def __init__(self, objective, lr=1e1, hist=float('inf'), linesearch='lewis_overton',
-                 ls_params={'c1':0.25, 'c2':75, 'max_ls':1e3},
-                 tolerance_change=1e-9, tolerance_grad=1e-7, store_hessian=False, **kwargs):
+    def __init__(self, objective, lr=1, hist=float('inf'), linesearch='weak_wolfe', ls_params=None, **kwargs):
         super(BFGS, self).__init__(objective, **kwargs)
 
         self.linesearch = linesearch
@@ -103,15 +101,12 @@ class BFGS(TorchAlg):
 
         # This is a modified BFGS from PyTorch
         self.optimizer = bfgs.BFGS([self.p], lr=self.lr, history_size=self.hist, line_search_fn=self.linesearch,
-                                     ls_params = ls_params, tolerance_change=tolerance_change, tolerance_grad=tolerance_grad,
-                                     store_hessian=store_hessian)
+                                     ls_params = ls_params)
 
         self.name = 'BFGS'
         self.name += ' (c1='+str(self.optimizer.c1)+',c2='+str(self.optimizer.c2)+',lr='+str(self.lr)+')'
 
-        self.store_hessian = store_hessian
-        if self.store_hessian:
-            self.path_hess = None
+        self.f_eval_cur = 1
 
     def step(self):
         super(TorchAlg, self).step()
@@ -123,15 +118,12 @@ class BFGS(TorchAlg):
             return value
         self.optimizer.step(closure)
 
+        # Saves the number of function evaluations
+        self.f_eval_cur = self.optimizer.f_eval_cur
+
         # Update current iterate value and update the bundle
         self.cur_x = self.p.data.numpy().copy()
         self.update_params()
-
-        if self.store_hessian:
-            hess_spec = torch.svd(self.optimizer.hessian, compute_uv=False)[1].data.numpy()
-            if (self.path_hess is None):
-                self.path_hess = np.ones(self.x_dim)[np.newaxis] # Hessian is identity at initialization
-            self.path_hess = np.concatenate((self.path_hess, hess_spec[np.newaxis]))
 
     def save_bundle(self):
         print('Bundled Saving Triggered', flush=True)
