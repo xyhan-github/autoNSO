@@ -9,21 +9,19 @@ from IPython import embed
 
 # Proximal Bundle Algorithm
 class ProxBundle(OptAlg):
-    def __init__(self, objective, mu=1.0, null_k=0.5, ignore_null=False, prune='Drop Inactive', active_thres=5e-3, solver='MOSEK',
+    def __init__(self, objective, mu=1.0, null_k=0.5, ignore_null=False, prune='Drop Inactive', active_thres=5e-3,
                  S = None, **kwargs):
 
         super(ProxBundle, self).__init__(objective, **kwargs)
         assert prune in ['Full','Drop Inactive','Drop All']
-        assert solver in ['GUROBI', 'MOSEK', 'OSQP']
 
         self.constraints    = []
         self.p              = cp.Variable(self.x_dim)  # variable of optimization
         self.v              = cp.Variable()  # value of cutting plane model
         self.mu             = mu
         self.null_k         = null_k
-        self.prune          = 'Full' if (prune is None) else prune
+        self.prune          = prune
         self.active_thres   = active_thres
-        self.solver         = solver
         self.objective.oracle_output = 'both'
         self.serious        = False
 
