@@ -26,7 +26,7 @@ class OptAlg:
         self.cur_x     = None
         self.cur_fx    = None
         self.path_x      = None
-        self.path_fx     = None
+        self.path_fx     = np.zeros((0,1))
         self.fx_step     = float('inf')
         
         self.verbose = verbose
