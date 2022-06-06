@@ -1,6 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 #%%
+import sys
+sys.path.append('..')
 
 import numpy as np
 from IPython import embed

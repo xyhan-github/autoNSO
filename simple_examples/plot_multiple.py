@@ -9,6 +9,9 @@ Created on Mon Sep  2 10:18:22 2019
 # Uses the prox-bundle method to solve the simple objective starting at (2,3)
 
 #%%
+import sys
+sys.path.append('..')
+
 import torch
 from torch import tensor, Tensor
 from vis.visualize import OptPlot
