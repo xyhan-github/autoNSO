@@ -20,5 +20,5 @@ from algs.prox_bundle import ProxBundle
 MaxFunc = maxQuadratic(n=10, k=5)
 
 # Run prox-bundle optimization algorithm
-optAlg = ProxBundle(MaxFunc, x0=np.ones(10)*0.1, max_iter=100, mu=100)
+optAlg = ProxBundle(MaxFunc, x0=np.ones(10)*0.1, max_iter=100, mu=10)
 optAlg.optimize()
