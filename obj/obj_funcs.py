@@ -129,3 +129,50 @@ def halfandhalf(n=50, seed=0, **kwargs):
         return sqrt(x.T@A@x) + x.T@B@x
 
     return Objective(hh_function, **kwargs)
+
+# Creates a strongly convex objective function for particular n and k
+def maxQuadratic(n=50, k=10, seed=0, L = 10, extra=False, isotropic=False, min_cond=0, **kwargs):
+    torch.random.manual_seed(seed)
+
+    # # Generate the g's, so that they sum with positive weights to 0
+    lam = (torch.rand(k,dtype=torch.double)*(1-min_cond)) + min_cond
+    lam /= sum(lam)
+    g  = torch.randn(k - 1, n, dtype=torch.double)
+    gk = -(lam[0:(k-1)] @ g)/lam[-1]
+    g  = torch.cat((g, gk[None, :]), 0)
+
+    if isotropic:
+        H = stack([torch.eye(n) * torch.rand(1) * L/(i+1) for i in range(k)])
+    else:
+        tmp = torch.randn(k, n, n, dtype=torch.double)
+        tmp = stack([tmp[i,:,:].T @ tmp[i,:,:] for i in range(k)])
+        max_norm = np.max([float(np.linalg.norm(tmp[i,:,:],ord=2)) for i in range(k)])
+        H = stack([(L / max_norm) * tmp[i,:,:] for i in range(k)])
+
+    if extra:
+        L_vec = [float(torch.svd(H[i,:,:],compute_uv=False)[1][0]) for i in range(k)]
+
+    def quad_function(x):
+        if type(x) != Tensor: # If non-tensor passed in, no gradient will be used
+            x = tensor(x, dtype=torch.double, requires_grad=False)
+        assert len(x) == n
+
+        term1 = g@x
+        # term1 = 0
+        term2 = 0.5 * stack([x.T @ H[i,:,:] @ x for i in range(k)])
+        return max(term1+term2)
+
+    attr = {'lambda' : lam,
+            'g'      : g}
+
+    if extra:
+        extra_info = {'L': L_vec,
+                      'lambda': lam,
+                      'H' : H,
+                      'g' : g}
+        obj = Objective(quad_function, **kwargs)
+        obj.extra_info = extra_info
+        return obj
+    else:
+        return Objective(quad_function, **kwargs)
+
