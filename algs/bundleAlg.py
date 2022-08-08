@@ -1,7 +1,5 @@
 import os
 import numpy as np
-import matlab.engine
-import multiprocessing
 
 from IPython import embed
 from algs.optAlg import OptAlg
@@ -34,8 +32,6 @@ class BundleAlg(OptAlg):
         self.mu = mu_sz
 
         self.solver = solver
-
-        self.start_matlab(eng)
 
         # Prepare the bundle
         if warm_start is None:
@@ -148,18 +144,3 @@ class BundleAlg(OptAlg):
 
         if self.leaving_met == 'ls':
             _, self.lam_cur = get_lam(self.dfS, solver=self.solver, eng=self.eng)
-
-    def start_matlab(self, eng):
-        if self.solver == 'MATLAB':
-            if eng is None:
-                print("Starting parallel pool for MATLAB solver", flush=True)
-
-                threads = multiprocessing.cpu_count()/2
-                self.eng = matlab.engine.start_matlab()
-                self.eng.parpool('local', threads)
-                self.eng.addpath(os.getcwd() + '/algs/newton_bundle_aux', nargout=0)
-                print('MATLAB Started!', flush=True)
-            else:
-                self.eng = eng
-        else:
-            self.eng=None
